@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estadística Web</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header>
+    <h1>Estadística Web</h1>
+    <p>Plataforma de análisis estadístico</p>
+    <p>Hoja activa: <span id="hoja-activa">Datos1</span></p>
+  </header>
+
+  <nav>
+    <button data-seccion="datos">Datos</button>
+    <button data-seccion="estadistica">Estadística</button>
+    <button data-seccion="aprendizaje">Aprendizaje no supervisado</button>
+    <button data-seccion="graficos">Gráficos</button>
+    <button data-seccion="resultados">Resultados</button>
+  </nav>
+
+  <main>
+    <section id="seccion-datos">
+      <h2>Datos</h2>
+      <p style="font-size:12px; color:#555;">
+        Haz clic en una celda para editarla. Puedes pegar datos copiados desde Excel (Ctrl+V) sobre la tabla.
+      </p>
+      <div id="contenedor-tabla" tabindex="0"></div>
+      <div class="botones-tabla">
+        <button id="btn-agregar-fila">Agregar fila</button>
+        <button id="btn-agregar-columna">Agregar columna</button>
+        <button id="btn-importar">Importar CSV</button>
+        <button id="btn-exportar">Exportar CSV</button>
+        <input type="file" id="input-archivo" accept=".csv" style="display:none">
+      </div>
+    </section>
+
+    <section id="seccion-estadistica" style="display:none">
+      <h2>Estadística</h2>
+
+      <h3>Análisis univariado</h3>
+      <label>Variable:
+        <select id="select-variable-univariada"></select>
+      </label>
+      <button id="btn-resumen-univariado">Resumen completo</button>
+      <button id="btn-frecuencias">Tabla de frecuencias</button>
+
+      <h3>Frecuencias por intervalos</h3>
+      <label>Variable:
+        <select id="select-variable-intervalos"></select>
+      </label>
+      <label>N.º intervalos:
+        <input type="number" id="input-num-intervalos" value="5" min="1" style="width:60px">
+      </label>
+      <button id="btn-intervalos">Generar intervalos</button>
+
+      <h3>Análisis multivariado</h3>
+      <label>Variable X:
+        <select id="select-x-multi"></select>
+      </label>
+      <label>Variable Y:
+        <select id="select-y-multi"></select>
+      </label>
+      <button id="btn-cov-cor">Covarianza y correlación</button>
+
+      <h3>Matrices</h3>
+      <label>Variables (Ctrl+clic):
+        <select id="select-matriz" multiple size="5"></select>
+      </label>
+      <button id="btn-matriz-cov">Matriz de covarianzas</button>
+      <button id="btn-matriz-cor">Matriz de correlaciones</button>
+
+      <h3>Regresión lineal simple</h3>
+      <label>X:
+        <select id="select-x-reg"></select>
+      </label>
+      <label>Y:
+        <select id="select-y-reg"></select>
+      </label>
+      <button id="btn-reg-simple">Regresión simple</button>
+
+      <h3>Regresión lineal múltiple</h3>
+      <label>Y:
+        <select id="select-y-regmul"></select>
+      </label>
+      <label>Variables X (Ctrl+clic):
+        <select id="select-x-regmul" multiple size="5"></select>
+      </label>
+      <button id="btn-reg-multiple">Regresión múltiple</button>
+
+      <h3>Inferencia</h3>
+      <label>Variable:
+        <select id="select-inf-var"></select>
+      </label>
+      <label>Nivel de confianza:
+        <select id="select-nivel">
+          <option value="0.90">90%</option>
+          <option value="0.95" selected>95%</option>
+          <option value="0.99">99%</option>
+        </select>
+      </label>
+
+      <div style="margin-top:8px">
+        <button id="btn-ic-media">IC para la media</button>
+      </div>
+
+      <div style="margin-top:8px">
+        <label>H₀: μ = <input type="number" id="input-mu0" value="0" style="width:80px"></label>
+        <button id="btn-t-una-media">Prueba t (una media)</button>
+      </div>
+
+      <div style="margin-top:8px">
+        <label>Grupo 1:
+          <select id="select-grupo1"></select>
+        </label>
+        <label>Grupo 2:
+          <select id="select-grupo2"></select>
+        </label>
+        <button id="btn-t-dos-medias">Prueba t (dos medias)</button>
+      </div>
+
+      <div style="margin-top:8px">
+        <label>Éxitos: <input type="number" id="input-exitos" value="0" style="width:60px"></label>
+        <label>Total: <input type="number" id="input-total" value="1" style="width:60px"></label>
+        <button id="btn-ic-proporcion">IC para proporción</button>
+      </div>
+
+      <div style="margin-top:8px">
+        <label>X:
+          <select id="select-x-pend"></select>
+        </label>
+        <label>Y:
+          <select id="select-y-pend"></select>
+        </label>
+        <button id="btn-prueba-pendiente">Prueba t para pendiente</button>
+      </div>
+    </section>
+
+    <section id="seccion-aprendizaje" style="display:none">
+      <h2>Aprendizaje no supervisado</h2>
+
+      <h3>Configuración común</h3>
+      <label>Variables (Ctrl+clic, mínimo 2):
+        <select id="select-vars-cluster" multiple size="6"></select>
+      </label>
+      <br>
+      <label>Número de clusters K:
+        <input type="number" id="input-k" value="2" min="1" style="width:60px">
+      </label>
+      <label>Máx. iteraciones:
+        <input type="number" id="input-max-iter" value="100" min="1" style="width:70px">
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" id="check-estandarizar"> Estandarizar datos (media 0, desviación 1)
+      </label>
+      <br>
+      <label>Tipo de distancia:
+        <select id="select-distancia">
+          <option value="euclidiana">Euclidiana</option>
+          <option value="manhattan">Manhattan</option>
+          <option value="minkowski">Minkowski</option>
+        </select>
+      </label>
+      <label>q (Minkowski):
+        <input type="number" id="input-q-minkowski" value="2" min="1" step="0.5" style="width:60px">
+      </label>
+
+      <h3>Algoritmos</h3>
+      <button id="btn-kmeans">Ejecutar K-means</button>
+      <button id="btn-kmedoids">Ejecutar K-medoids</button>
+
+      <p style="font-size:12px; color:#555; margin-top:10px;">
+        Otros métodos (jerárquico, DBSCAN) pendientes de confirmar con el profesor.
+      </p>
+    </section>
+
+    <section id="seccion-graficos" style="display:none">
+      <h2>Gráficos</h2>
+
+      <h3>Histograma</h3>
+      <label>Variable:
+        <select id="select-graf-hist"></select>
+      </label>
+      <label>N.º intervalos:
+        <input type="number" id="input-graf-hist-int" value="5" min="1" style="width:60px">
+      </label>
+      <button id="btn-graf-histograma">Generar histograma</button>
+
+      <h3>Gráfico de barras</h3>
+      <label>Variable:
+        <select id="select-graf-barras"></select>
+      </label>
+      <button id="btn-graf-barras">Generar barras</button>
+
+      <h3>Diagrama de caja y bigotes</h3>
+      <label>Variable:
+        <select id="select-graf-caja"></select>
+      </label>
+      <button id="btn-graf-caja">Generar caja</button>
+
+      <h3>Dispersión</h3>
+      <label>X:
+        <select id="select-graf-disp-x"></select>
+      </label>
+      <label>Y:
+        <select id="select-graf-disp-y"></select>
+      </label>
+      <label>
+        <input type="checkbox" id="check-graf-recta"> Incluir recta de regresión
+      </label>
+      <button id="btn-graf-dispersion">Generar dispersión</button>
+
+      <p style="font-size:12px; color:#555; margin-top:10px;">
+        Los gráficos de clusters se generan automáticamente al ejecutar K-means o K-medoids.
+      </p>
+    </section>
+
+    <section id="seccion-resultados" style="display:none">
+      <h2>Resultados</h2>
+      <div id="panel-resultados">
+        <p>Aquí se mostrarán los resultados de los análisis.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/datos/tabla.js"></script>
+  <script src="js/datos/validacion.js"></script>
+  <script src="js/datos/importacion.js"></script>
+  <script src="js/datos/exportacion.js"></script>
+  <script src="js/estadistica/descriptiva.js"></script>
+  <script src="js/estadistica/frecuencias.js"></script>
+  <script src="js/estadistica/agrupados.js"></script>
+  <script src="js/estadistica/multivariado.js"></script>
+  <script src="js/estadistica/regresion.js"></script>
+  <script src="js/estadistica/inferencia.js"></script>
+  <script src="js/aprendizaje/distancias.js"></script>
+  <script src="js/aprendizaje/kmeans.js"></script>
+  <script src="js/aprendizaje/kmedoids.js"></script>
+  <script src="js/graficos/graficos.js"></script>
+  <script src="js/resultados/resultados.js"></script>
+  <script src="js/principal.js"></script>
+</body>
+</html>
